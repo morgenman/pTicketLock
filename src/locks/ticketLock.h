@@ -71,5 +71,9 @@ private:
   // Implementation details. May include fields (turn, ticket, ...) and methods.
   // Might make use of spin locks, xchg (since it is in the source code), and,
   // perhaps, methods from the book/slides pertaining to a ticket lock.
+
+  int ticket;
+  int currentTurn;
+  int maxTickets;
 };
 #endif /* TICKETLOCK_H */

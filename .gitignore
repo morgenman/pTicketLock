@@ -46,3 +46,7 @@
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
 /compile_commands.json
+.vscode/configurationCache.log
+.vscode/dryrun.log
+.vscode/settings.json
+.vscode/targets.log
