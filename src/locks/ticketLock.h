@@ -76,15 +76,8 @@ class TicketLock {
   // Might make use of spin locks, xchg (since it is in the source code), and,
   // perhaps, methods from the book/slides pertaining to a ticket lock.
   unsigned int newTicketUnique;
-  vector<unsigned int> threads;
-  unsigned int maxThreads;
+  unsigned int threads;
+  unsigned int turn;
   SpinLock newTicketLock;
-  SpinLock masterLock;
-
-  /**
-   *
-   * @return {unsigned}  :
-   */
-  unsigned int getNext() volatile;
 };
 #endif /* TICKETLOCK_H */

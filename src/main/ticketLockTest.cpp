@@ -142,8 +142,12 @@ int main(int argc, char *argv[]) {
   }
 
   // final message
-  cout << arguments[0] << " ends with (" << number_of_iterations << ", "
-       << number_of_threads << ")" << endl;
+  cout << arguments[0];
+  cout << " ends with (";
+  cout << number_of_iterations;
+  cout << ", ";
+  cout << number_of_threads;
+  cout << ")" << endl;
   cout << "Final value: " << counter
        << ((counter == expected_value) ? " = " : " < ") << expected_value
        << endl;
