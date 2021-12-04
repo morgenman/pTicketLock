@@ -22,7 +22,7 @@ TicketLock::Ticket TicketLock::lock() volatile {
   return Ticket{ticket, turn};
 }
 
-void TicketLock::unlock() volatile { turn = evil_increment(turn, 1, 0); }
+void TicketLock::unlock() volatile { turn = evil_increment(turn); }
 
 // slowly increment the given variable; increment and delay are both defaulted
 unsigned int TicketLock::evil_increment(

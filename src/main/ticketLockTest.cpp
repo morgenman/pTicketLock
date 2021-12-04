@@ -75,7 +75,7 @@ void thread_worker(const string &threadName, int loops,
     ticket_lock.unlock();
     if (threadNumber == 0) {
       timespec t;
-      t.tv_sec = 4;
+      t.tv_sec = 1;  // TODO change this back to 4
       t.tv_nsec = 0;
       nanosleep(&t, NULL);
     }
