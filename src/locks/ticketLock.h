@@ -54,7 +54,7 @@ class TicketLock {
    * Release the lock, permitting some waiting thread (if there are
    * any) into the critical region.
    */
-  void unlock() volatile;
+  void unlock(Ticket in) volatile;
 
  private:
   /**

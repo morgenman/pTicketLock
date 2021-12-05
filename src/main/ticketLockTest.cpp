@@ -72,10 +72,10 @@ void thread_worker(const string &threadName, int loops,
     local_copy_of_counter++;
     counter = local_copy_of_counter;
     random_pause(10000000L, 15000000L, gen);
-    ticket_lock.unlock();
+    ticket_lock.unlock(ticket);
     if (threadNumber == 0) {
       timespec t;
-      t.tv_sec = 1;  // TODO change this back to 4
+      t.tv_sec = 4;
       t.tv_nsec = 0;
       nanosleep(&t, NULL);
     }

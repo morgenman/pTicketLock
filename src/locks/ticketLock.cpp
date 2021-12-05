@@ -1,9 +1,12 @@
 #include "ticketLock.h"
 
 #include <chrono>
+#include <iostream>
 #include <thread>
 
 #include "SpinLock.h"
+
+using namespace std;
 
 TicketLock::TicketLock(unsigned int turnCount) {
   threads = turnCount;
@@ -15,14 +18,16 @@ TicketLock::TicketLock(unsigned int turnCount) {
 TicketLock::Ticket TicketLock::lock() volatile {
   newTicketLock.lock();
   unsigned int ticket = newTicketUnique;
-  newTicketUnique = evil_increment(newTicketUnique);
+  newTicketUnique = evil_increment(newTicketUnique) % threads;
   newTicketLock.unlock();
   while (ticket != turn)
     ;
   return Ticket{ticket, turn};
 }
 
-void TicketLock::unlock() volatile { turn = evil_increment(turn); }
+void TicketLock::unlock(TicketLock::Ticket in) volatile {
+  turn = evil_increment(turn) % threads;
+}
 
 // slowly increment the given variable; increment and delay are both defaulted
 unsigned int TicketLock::evil_increment(
