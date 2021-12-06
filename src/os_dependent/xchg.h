@@ -1,3 +1,6 @@
+/**
+ * I am not documenting this file because I have not changed anything in it
+ */
 #ifndef XCHG_H
 #define XCHG_H
 
@@ -18,9 +21,10 @@
 static inline unsigned int xchg(volatile unsigned int *lock_var,
                                 unsigned int lock_val) {
   unsigned int result;
-  asm volatile("lock; xchgl %0, %1" :
-               "+m" (*lock_var), "=a" (result) :
-               "1" (lock_val) : "cc");
+  asm volatile("lock; xchgl %0, %1"
+               : "+m"(*lock_var), "=a"(result)
+               : "1"(lock_val)
+               : "cc");
   return result;
 }
 

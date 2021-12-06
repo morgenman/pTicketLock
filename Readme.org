@@ -1,8 +1,0 @@
-#+STARTUP: showall
-#+TITLE: TicketLock
-#+SUBTITLE: CIS 310: Operating Systems
-#+AUTHOR: Brian C. Ladd
-#+DATE: Fall 2021
-
-* Introduction
-Implementing a fair concurrency operator, a TicketLock.

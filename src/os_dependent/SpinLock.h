@@ -1,8 +1,11 @@
+/**
+ * I am not documenting this file because I have not changed anything in it
+ */
 #ifndef SPINLOCK_H
 #define SPINLOCK_H
 
 class SpinLock {
-  private:
+ private:
   //
   // xchg(int *addr, int newval)
   // return what is pointed to by addr
@@ -10,26 +13,26 @@ class SpinLock {
   //
   static inline uint xchg(volatile unsigned int *addr, unsigned int newval) {
     uint result;
-    asm volatile("lock; xchgl %0, %1" :
-                 "+m" (*addr), "=a" (result) :
-                 "1" (newval) : "cc");
+    asm volatile("lock; xchgl %0, %1"
+                 : "+m"(*addr), "=a"(result)
+                 : "1"(newval)
+                 : "cc");
     return result;
   }
 
   unsigned int _lock;
-  public:
-  SpinLock(): _lock{0} {
+
+ public:
+  SpinLock() : _lock{0} {
     // nothing to do
   }
 
   void lock() volatile {
-    while(xchg(&_lock, 1) == 1)
-      ; // spin
+    while (xchg(&_lock, 1) == 1)
+      ;  // spin
   }
 
-  void unlock() volatile {
-    _lock = 0;
-  }
+  void unlock() volatile { _lock = 0; }
 };
 
 #endif /* SPINLOCK_H */

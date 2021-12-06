@@ -1,31 +1,42 @@
+/**
+ * Main Documentation for this file provided in header.
+ */
 #include "ticketLock.h"
 
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <vector>
 
 #include "SpinLock.h"
-
-using namespace std;
 
 TicketLock::TicketLock(unsigned int turnCount) {
   threads = turnCount;
   turn = 0;
-  newTicketUnique = 0;
-  newTicketLock = {};
+  ticket = 0;
 }
 
 TicketLock::Ticket TicketLock::lock() volatile {
-  newTicketLock.lock();
-  unsigned int ticket = newTicketUnique;
-  newTicketUnique = evil_increment(newTicketUnique) % threads;
-  newTicketLock.unlock();
-  while (ticket != turn)
-    ;
-  return Ticket{ticket, turn};
+  unsigned int ticketOut;       // Ticket it is assigned
+  unsigned int serving = turn;  // Initial turn when waiting started
+
+  spinLock.lock();
+  ticketOut = ticket;  // Make sure two threads don't get the same ticket
+  ticket = evil_increment(ticket) %
+           threads;  // Make sure the ticket is only incremented once
+  spinLock.unlock();
+
+  while (ticketOut != turn)
+    ;  // Sit and spin
+
+  return Ticket{ticketOut, serving};
 }
 
-void TicketLock::unlock(TicketLock::Ticket in) volatile {
+void TicketLock::unlock() volatile {
+  // I don't believe I need to protect this because only one thread at a time
+  // should be able to call it. This is because only one ticket is running in
+  // the protected area at a time, and thus only one is going to call unlock at
+  // a time.
   turn = evil_increment(turn) % threads;
 }
 

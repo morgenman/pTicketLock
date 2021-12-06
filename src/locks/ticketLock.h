@@ -1,3 +1,20 @@
+/**
+ *  TicketLock provides a basic ticketlock system
+ *
+ *  Ideally there will be one instance of TicketLock which is shared by multiple
+ *  threads. In the lock() method the logic for determining the next ticket is
+ *  spinlocked by an instance of SpinLock.
+ *  This ensures that each thread asking for a ticket gets a unique ticket.
+ *  Because the number of threads is equal to the number of tickets, and the
+ *  ticket issuing logic is spinlocked, it shouldn't be possible for two threads
+ *  to get into the protected region at the same time.
+ *
+ *  @author: Dylan (Cole) Morgen
+ *  @email: morgendc203@potsdam.edu
+ *  @course: CIS 310 Operating Systems
+ *  @due: 12/08/2021
+ */
+
 #ifndef TICKETLOCK_H
 #define TICKETLOCK_H
 #include <string>
@@ -54,7 +71,7 @@ class TicketLock {
    * Release the lock, permitting some waiting thread (if there are
    * any) into the critical region.
    */
-  void unlock(Ticket in) volatile;
+  void unlock() volatile;
 
  private:
   /**
@@ -72,12 +89,15 @@ class TicketLock {
                               int incrementToAdd = 1,
                               unsigned int milliseconds = 25) volatile;
 
-  // Implementation details. May include fields (turn, ticket, ...) and methods.
-  // Might make use of spin locks, xchg (since it is in the source code), and,
-  // perhaps, methods from the book/slides pertaining to a ticket lock.
-  unsigned int newTicketUnique;
+  // ticket is the next ticket available
+  unsigned int ticket;
+  // threads stores the number of threads using this ticketLock
   unsigned int threads;
+  // turn stores which ticket is next to be called
   unsigned int turn;
-  SpinLock newTicketLock;
+  // spinLock is used to lock the ticket serving function
+  volatile SpinLock spinLock;
+
+  // volatile bool testing[3]{false};
 };
 #endif /* TICKETLOCK_H */

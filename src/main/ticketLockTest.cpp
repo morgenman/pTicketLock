@@ -1,5 +1,7 @@
 /**
  * The test frame work for the ticket lock implementation.
+ * I am not documenting this file because I have not changed anything in it.
+ * (I added a trace variable, but it's trivial)
  */
 #include <functional>
 #include <iostream>
@@ -18,6 +20,7 @@ volatile unsigned int counter = 0;
 // default values
 constexpr int DEFAULT_ITERATIONS = 10;
 constexpr int DEFAULT_THREADS = 3;
+const bool trace = false;
 
 /**
  * Pause (sleep) the current thread for a uniformly distributed time
@@ -64,6 +67,9 @@ void thread_worker(const string &threadName, int loops,
   mt19937 gen(rd());  // Standard mersenne_twister_engine seeded with rd()
 
   for (int i = 0; i < loops; i++) {
+    if (trace)
+      cout << "===================Locking " << threadName
+           << "===================" << endl;
     TicketLock::Ticket ticket = ticket_lock.lock();
     int local_copy_of_counter = counter;
     cout << threadName << "[" << i
@@ -72,7 +78,10 @@ void thread_worker(const string &threadName, int loops,
     local_copy_of_counter++;
     counter = local_copy_of_counter;
     random_pause(10000000L, 15000000L, gen);
-    ticket_lock.unlock(ticket);
+    if (trace)
+      cout << "==================Unlocking " << threadName
+           << "==================" << endl;
+    ticket_lock.unlock();
     if (threadNumber == 0) {
       timespec t;
       t.tv_sec = 4;
